@@ -4,8 +4,7 @@
 \alias{compute_nvar}
 \title{Compute the nvar parameter from a DEM}
 \usage{
-compute_nvar(SP, DEM, NZ, showplot = TRUE, dev = "dev",
-  file = "RPlot\%03d", ...)
+compute_nvar(SP, DEM, NZ)
 }
 \arguments{
 \item{SP}{a spatialPoints object at which points the values of the raster should be extracted or a character string pointing at a ESRI shapefile}
@@ -13,14 +12,6 @@ compute_nvar(SP, DEM, NZ, showplot = TRUE, dev = "dev",
 \item{DEM}{a raster object containing the DEM information or a character string pointing at such a raster}
 
 \item{NZ}{a raster object containing the information of the NZ values of the COSERO model or a character string pointing at such a raster}
-
-\item{showplot}{logical. Should the results be plotted (rastermap)}
-
-\item{dev}{device for optional plotting of the results. See \code{\link{dev.new.file}}}
-
-\item{file}{filename for optional plotting of the results.}
-
-\item{...}{additional parameters passed from other methods}
 }
 \value{
 Returns a matrix of nvar values at specific points

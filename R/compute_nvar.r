@@ -5,15 +5,11 @@
 #' @param SP a spatialPoints object at which points the values of the raster should be extracted or a character string pointing at a ESRI shapefile
 #' @param DEM a raster object containing the DEM information or a character string pointing at such a raster
 #' @param NZ a raster object containing the information of the NZ values of the COSERO model or a character string pointing at such a raster
-#' @param showplot logical. Should the results be plotted (rastermap)
-#' @param dev device for optional plotting of the results. See \code{\link{dev.new.file}}
-#' @param file filename for optional plotting of the results.
-#' @param ... additional parameters passed from other methods
 #'
 #' @return Returns a matrix of nvar values at specific points
 #' @export
 
-compute_nvar <- function(SP, DEM, NZ, showplot = TRUE, dev="dev", file = "RPlot%03d", ...){
+compute_nvar <- function(SP, DEM, NZ){
 
   library(raster)
   library(rgdal)
@@ -50,6 +46,13 @@ compute_nvar <- function(SP, DEM, NZ, showplot = TRUE, dev="dev", file = "RPlot%
   rough4 <- (rough <= quantile(rough, 0.8) & rough > quantile(rough, 0.6)) * rough
   rough5 <- (rough <= quantile(rough, 1) & rough > quantile(rough, 0.8)) * rough
 
+  # resampling
+  rough1 <- resample(rough1, NZ)
+  rough2 <- resample(rough2, NZ)
+  rough3 <- resample(rough3, NZ)
+  rough4 <- resample(rough4, NZ)
+  rough5 <- resample(rough5, NZ)
+
   NZMAT <- as.matrix(NZ)
   RMAT <- list(
     as.matrix(rough1),
@@ -68,6 +71,18 @@ compute_nvar <- function(SP, DEM, NZ, showplot = TRUE, dev="dev", file = "RPlot%
       if(!is.na(NZMAT[i,k])){
         x <- c(RMAT[[1]][i,k],RMAT[[2]][i,k],RMAT[[3]][i,k],RMAT[[4]][i,k],RMAT[[5]][i,k])
         x = 1/x
+        if(any(x %in% c(0, Inf, -Inf))){
+          for(j in 1:5){
+            if(x[j] %in% c(0, -Inf)) x[j] <- 0.001
+            if(x[j] == Inf){
+              if(j > 1){
+                x[j] <- (x[j-1] + 1)^2
+              } else {
+                x[j] <- 0.001
+              }
+            }
+          }
+        }
         x[x <= 0] <- 0.01 # Da kein Log von 0 gezogen werden kann
         x[x == Inf] <- 500
         x[x == -Inf] <- 0.01
@@ -86,7 +101,6 @@ compute_nvar <- function(SP, DEM, NZ, showplot = TRUE, dev="dev", file = "RPlot%
   NVARvec <- (NVARvec-max(NVARvec,na.rm=TRUE))*-1
 
   output <- cbind(NZvec,NVARvec,LLIKEvec)
-  #output <- output[complete.cases(output),]
 
   # Normieren der Werte (0...1)
   max_out <- max(output[,2],na.rm=TRUE)
@@ -98,19 +112,8 @@ compute_nvar <- function(SP, DEM, NZ, showplot = TRUE, dev="dev", file = "RPlot%
   output[,2] <- test
   output <- output[complete.cases(output),]
 
-  if(!showplot){
-    return(output)
-  } else {
-    er <- rasterize(SP, rough1, "NVAR")
-    clrmp <- colorRampPalette(c("GreenYellow","yellow","gold","red"))
-    dev.new.file(device = dev, file = file, width = 14, height = 7, units = "in")
-    par(mar=c(1,1,4,6),oma=c(0,0,0,0))
-    image.plot(er,col=clrmp(255),zlim=c(0,exp(1)-1),xaxt="n",yaxt="n",ylab="",xlab="",main="Verteilung von nvar")
-    if(dev != "dev"){
-      dev.off()
-    }
-    return(output)
-  }
+
+  return(output)
 
 }
 
