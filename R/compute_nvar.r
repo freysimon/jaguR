@@ -8,6 +8,10 @@
 #'
 #' @return Returns a matrix of nvar values at specific points
 #' @export
+#' @import raster
+#' @import rgdal
+#' @import MASS
+#' @import TigR
 
 compute_nvar <- function(SP, DEM, NZ){
 
