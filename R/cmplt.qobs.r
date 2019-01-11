@@ -53,10 +53,11 @@ cmplt.qobs <- function(x, start=NULL, end=NULL, TZ = "utc", file=NULL, ...){
   # clear duplicated entries
   x <- clear.duplicated(x)
 
+  x[is.na(x)] <- -0.01
+
   if(!is.null(file)){
     write.xts(x, file = file, col.names = TRUE, format = "%Y  %m  %d  %H  %M", fmt = "%8.2f")
   }
-
 
   return(x)
 
