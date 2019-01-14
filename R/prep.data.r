@@ -27,16 +27,28 @@ prep.data <- function(x, filename, fill = TRUE, divide = NULL, ...){
 
   if(divide == "years"){
 
+    index.x.is.hydrological <- month(first(index(x))) %in% c(9:10) & month(last(index(x))) %in% c(9:10)
+
     ext <- paste(".",file_ext(filename),sep="")
     filename <- gsub(ext,"",filename)
 
-    nHY <- length(split(x[.indexmon(x) %in% 0:8], f="years"))-1
+    if(index.x.is.hydrological){
+      nHY <- length(split(x[.indexmon(x) %in% 0:8], f="years"))
+    } else {
+      nHY <- length(split(x[.indexmon(x) %in% 0:8], f="years"))-1
+    }
+
 
     myList <- list()
 
     for(k in 1:nHY){
+
       oct2dec <- split(x[.indexmon(x) %in% 9:11], f="years")[[k]]
-      jan2sep <- split(x[.indexmon(x) %in% 0:8], f="years")[[k + 1]]
+      if(index.x.is.hydrological){
+        jan2sep <- split(x[.indexmon(x) %in% 0:8], f="years")[[k]]
+      } else {
+        jan2sep <- split(x[.indexmon(x) %in% 0:8], f="years")[[k+1]]
+      }
 
       myList[[k]] <- rbind(oct2dec, jan2sep)
 
