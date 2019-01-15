@@ -4,7 +4,8 @@
 \alias{prep.data}
 \title{Prepare P_IZ and T_IZ data for use in COSERO}
 \usage{
-prep.data(x, filename, fill = TRUE, divide = NULL, ...)
+prep.data(x, filename, fill = TRUE, divide = NULL, fmt = "\%6.1f",
+  ...)
 }
 \arguments{
 \item{x}{an xts object, normally created by reading a T_IZ or P_IZ file using \code{\link{read.xts}}}
@@ -14,6 +15,8 @@ prep.data(x, filename, fill = TRUE, divide = NULL, ...)
 \item{fill}{logical. Should missing values be filled (see \code{\link{fill.missing}} for details)}
 
 \item{divide}{NULL or "years". If "years", x will be divided into hydrological years}
+
+\item{fmt}{character string passed on to \code{\link{sprintf}} via \code{\link{write.xts}} for formatting numerical values. If NULL, no special format is used.}
 
 \item{...}{further arguments passed to \code{\link{write.xts}}}
 }
@@ -25,6 +28,9 @@ Prepare a P_IZ or T_IZ file to be processed by COSERO. Any missing values can be
 }
 \details{
 If the output is divided more than one file is written. The filename then is extended by the hydrological year (e.g. file_2019.txt for the period from 2018-10-01 to 2019-09-30)
+}
+\seealso{
+\code{\link{write.xts}}
 }
 \author{
 Simon Frey
