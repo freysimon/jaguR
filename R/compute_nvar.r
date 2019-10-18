@@ -90,6 +90,7 @@ compute_nvar <- function(SP, DEM, NZ){
         x[x <= 0] <- 0.01 # Da kein Log von 0 gezogen werden kann
         x[x == Inf] <- 500
         x[x == -Inf] <- 0.01
+        x[is.na(x)] <- 0.01
         fit <- MASS::fitdistr(x,"lognormal")
         NVAR[i,k] <- fit$estimate[2]
         LLIKE[i,k] <- fit$loglik
