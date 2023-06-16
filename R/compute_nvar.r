@@ -9,14 +9,14 @@
 #' @return Returns a matrix of nvar values at specific points
 #' @export
 #' @import raster
-#' @import rgdal
+#' @import terra
 #' @import MASS
 #' @import TigR
 
 compute_nvar <- function(SP, DEM, NZ){
 
   library(raster)
-  library(rgdal)
+  library(terra)
   library(MASS)
   library(TigR)
 
@@ -34,10 +34,7 @@ compute_nvar <- function(SP, DEM, NZ){
 
 
   if(class(SP) == "character"){
-    pathparts <- strsplit(SP, "/", fixed = TRUE)[[1]]
-    dsn <- paste(pathparts[1:(length(pathparts)-1)], collapse = "/")
-    shp <- substr(pathparts[length(pathparts)], 1, nchar(pathparts[length(pathparts)])-4)
-    SP <- readOGR(dsn = dsn, layer = shp)
+    SP <- terra::vect(SP)
   } else if (class(SP) != "SpatialPointsDataFrame"){
     stop("SP must be a SpatialPointsDataFrame object or a character string pointing towards a shapefile")
   }

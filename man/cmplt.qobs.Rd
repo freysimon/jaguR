@@ -4,8 +4,7 @@
 \alias{cmplt.qobs}
 \title{Complete QOBS for use in COSERO}
 \usage{
-cmplt.qobs(x, start = NULL, end = NULL, TZ = "utc", file = NULL,
-  ...)
+cmplt.qobs(x, start = NULL, end = NULL, TZ = "utc", file = NULL, ...)
 }
 \arguments{
 \item{x}{an xts object}
