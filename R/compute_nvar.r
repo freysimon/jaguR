@@ -1,4 +1,3 @@
-
 #' @author Simon Frey
 #' @description Derive the parameter nvar for the hydrological model COSERO from roughness parameters of a DEM
 #' @title Compute the nvar parameter from a DEM
@@ -111,4 +110,3 @@ compute_nvar <- function(DEM, NZ){
   return(output)
 
 }
-
