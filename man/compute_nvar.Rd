@@ -4,11 +4,9 @@
 \alias{compute_nvar}
 \title{Compute the nvar parameter from a DEM}
 \usage{
-compute_nvar(SP, DEM, NZ)
+compute_nvar(DEM, NZ)
 }
 \arguments{
-\item{SP}{a spatialPoints object at which points the values of the raster should be extracted or a character string pointing at a ESRI shapefile}
-
 \item{DEM}{a raster object containing the DEM information or a character string pointing at such a raster}
 
 \item{NZ}{a raster object containing the information of the NZ values of the COSERO model or a character string pointing at such a raster}

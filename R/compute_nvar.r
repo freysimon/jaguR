@@ -2,53 +2,43 @@
 #' @author Simon Frey
 #' @description Derive the parameter nvar for the hydrological model COSERO from roughness parameters of a DEM
 #' @title Compute the nvar parameter from a DEM
-#' @param SP a spatialPoints object at which points the values of the raster should be extracted or a character string pointing at a ESRI shapefile
 #' @param DEM a raster object containing the DEM information or a character string pointing at such a raster
 #' @param NZ a raster object containing the information of the NZ values of the COSERO model or a character string pointing at such a raster
 #'
 #' @return Returns a matrix of nvar values at specific points
 #' @export
 #' @import raster
-#' @import rgdal
+#' @import terra
 #' @import MASS
 #' @import TigR
 
-compute_nvar <- function(SP, DEM, NZ){
+compute_nvar <- function(DEM, NZ){
 
   library(raster)
-  library(rgdal)
+  library(terra)
   library(MASS)
   library(TigR)
 
   if(class(DEM) == "character"){
-    DEM <- raster::raster(DEM)
-  } else if(class(DEM) != "RasterLayer"){
+    DEM <- terra::rast(DEM)
+  } else if(!class(DEM) %in% c("RasterLayer","SpatRaster")){
     stop("DEM must be a raster object or a character string pointing towards a raster")
   }
 
   if(class(NZ) == "character"){
-    NZ <- raster::raster(NZ)
+    NZ <- terra::rast(NZ)
   } else if(class(NZ) != "RasterLayer"){
     stop("NZ must be a raster object or a character string pointing towards a raster")
   }
 
 
-  if(class(SP) == "character"){
-    pathparts <- strsplit(SP, "/", fixed = TRUE)[[1]]
-    dsn <- paste(pathparts[1:(length(pathparts)-1)], collapse = "/")
-    shp <- substr(pathparts[length(pathparts)], 1, nchar(pathparts[length(pathparts)])-4)
-    SP <- readOGR(dsn = dsn, layer = shp)
-  } else if (class(SP) != "SpatialPointsDataFrame"){
-    stop("SP must be a SpatialPointsDataFrame object or a character string pointing towards a shapefile")
-  }
+  rough <- terrain(DEM,v="roughness")
 
-  rough <- terrain(DEM,opt="roughness")
-
-  rough1 <- (rough <= quantile(rough, 0.2)) * rough
-  rough2 <- (rough <= quantile(rough, 0.4) & rough > quantile(rough, 0.2)) * rough
-  rough3 <- (rough <= quantile(rough, 0.6) & rough > quantile(rough, 0.4)) * rough
-  rough4 <- (rough <= quantile(rough, 0.8) & rough > quantile(rough, 0.6)) * rough
-  rough5 <- (rough <= quantile(rough, 1) & rough > quantile(rough, 0.8)) * rough
+  rough1 <- (rough <= quantile(values(rough), 0.2, na.rm = TRUE)) * rough
+  rough2 <- (rough <= quantile(values(rough, 0.4, na.rm = TRUE)) & rough > quantile(values(rough, 0.2, na.rm = TRUE))) * rough
+  rough3 <- (rough <= quantile(values(rough, 0.6, na.rm = TRUE)) & rough > quantile(values(rough, 0.4, na.rm = TRUE))) * rough
+  rough4 <- (rough <= quantile(values(rough, 0.8, na.rm = TRUE)) & rough > quantile(values(rough, 0.6, na.rm = TRUE))) * rough
+  rough5 <- (rough <= quantile(values(rough, 1, na.rm = TRUE)) & rough > quantile(values(rough, 0.8, na.rm = TRUE))) * rough
 
   # resampling
   rough1 <- resample(rough1, NZ)

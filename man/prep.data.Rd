@@ -4,8 +4,7 @@
 \alias{prep.data}
 \title{Prepare P_IZ and T_IZ data for use in COSERO}
 \usage{
-prep.data(x, filename, fill = TRUE, divide = NULL, fmt = "\%6.1f",
-  ...)
+prep.data(x, filename, fill = TRUE, divide = NULL, fmt = "\%6.1f", ...)
 }
 \arguments{
 \item{x}{an xts object, normally created by reading a T_IZ or P_IZ file using \code{\link{read.xts}}}
