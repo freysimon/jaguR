@@ -26,7 +26,7 @@ compute_nvar <- function(DEM, NZ){
 
   if(class(NZ) == "character"){
     NZ <- terra::rast(NZ)
-  } else if(class(NZ) != "RasterLayer"){
+  } else if(!class(NZ) %in% c("RasterLayer","SpatRaster")){
     stop("NZ must be a raster object or a character string pointing towards a raster")
   }
 
