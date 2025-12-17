@@ -1,6 +1,6 @@
 #' @author Simon Frey
 #' @description Derive the parameter nvar for the hydrological model COSERO from roughness parameters of a DEM
-#' @title Compute the nvar parameter from a DEM
+#' @title Compute the nvar parameter from a DEM (deprecated)
 #' @param DEM a raster object containing the DEM information or a character string pointing at such a raster
 #' @param NZ a raster object containing the information of the NZ values of the COSERO model or a character string pointing at such a raster
 #'
@@ -10,6 +10,9 @@
 #' @import terra
 #' @import MASS
 #' @import TigR
+#' @details
+#' Deprecated. Please use \\link{} instead.
+#'
 
 compute_nvar <- function(DEM, NZ){
 
@@ -34,10 +37,10 @@ compute_nvar <- function(DEM, NZ){
   rough <- terrain(DEM,v="roughness")
 
   rough1 <- (rough <= quantile(values(rough), 0.2, na.rm = TRUE)) * rough
-  rough2 <- (rough <= quantile(values(rough, 0.4, na.rm = TRUE)) & rough > quantile(values(rough, 0.2, na.rm = TRUE))) * rough
-  rough3 <- (rough <= quantile(values(rough, 0.6, na.rm = TRUE)) & rough > quantile(values(rough, 0.4, na.rm = TRUE))) * rough
-  rough4 <- (rough <= quantile(values(rough, 0.8, na.rm = TRUE)) & rough > quantile(values(rough, 0.6, na.rm = TRUE))) * rough
-  rough5 <- (rough <= quantile(values(rough, 1, na.rm = TRUE)) & rough > quantile(values(rough, 0.8, na.rm = TRUE))) * rough
+  rough2 <- (rough <= quantile(values(rough), 0.4, na.rm = TRUE) & rough > quantile(values(rough), 0.2, na.rm = TRUE)) * rough
+  rough3 <- (rough <= quantile(values(rough), 0.6, na.rm = TRUE) & rough > quantile(values(rough), 0.4, na.rm = TRUE)) * rough
+  rough4 <- (rough <= quantile(values(rough), 0.8, na.rm = TRUE) & rough > quantile(values(rough), 0.6, na.rm = TRUE)) * rough
+  rough5 <- (rough <= quantile(values(rough), 1, na.rm = TRUE) & rough > quantile(values(rough), 0.8, na.rm = TRUE)) * rough
 
   # resampling
   rough1 <- resample(rough1, NZ)

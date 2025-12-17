@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_nvar.r
 \name{compute_nvar}
 \alias{compute_nvar}
-\title{Compute the nvar parameter from a DEM}
+\title{Compute the nvar parameter from a DEM (deprecated)}
 \usage{
 compute_nvar(DEM, NZ)
 }
@@ -16,6 +16,9 @@ Returns a matrix of nvar values at specific points
 }
 \description{
 Derive the parameter nvar for the hydrological model COSERO from roughness parameters of a DEM
+}
+\details{
+Deprecated. Please use \\link{} instead.
 }
 \author{
 Simon Frey

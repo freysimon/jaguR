@@ -1,7 +1,7 @@
 Package: jaguR
 Type: Package
 Title: Computing spatial characteristics for COSERO
-Version: 0.2.0.1
+Version: 0.2.1
 IMPORTS: 
     TigR (>= 0.4.0.0), 
     tools, 
