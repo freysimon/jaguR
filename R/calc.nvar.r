@@ -5,8 +5,8 @@
 #' @param DEM SpatRaster object containing a digital elevation model where roughness information can be derived from. Might be NA. See details.
 #' @param x SpatVector object with points geometry. At these locations, NVAR will be extracted.
 #' @param resamp SpatRaster object or FALSE. If resamp is a SpatRaster object, rough is resampled to match the spatial resolution of resamp.
-#' @imports terra
-#' @imports MASS
+#' @import terra
+#' @import MASS
 #' @export
 #' @return A two column matrix containing the ID of the points in x and the computed values of NVAR.
 #' @details
@@ -62,7 +62,7 @@ calc.nvar <- function(rough=NA, DEM=NA, x, resamp = FALSE){
   # resample rough1 to rough5 rasters if resamp != FALSE
   if(isTRUE(use.resample)){
 
-    if(prod(res(DEM)) >= prod(res(resamp))){
+    if(prod(res(rough)) >= prod(res(resamp))){
       warning("Resolution of resamp is higher than the resolution of rough. No resampling possible. Skipping resample.")
     } else {
       rough1 <- terra::resample(rough1, resamp, method = "bilinear")
